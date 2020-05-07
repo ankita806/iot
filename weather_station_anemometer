@@ -1,0 +1,28 @@
+#include <ESP8266HTTPClient.h>
+#include <ESP8266WiFi.h>
+
+
+void counting_windspeed();
+unsigned long int lastDebounceTime_wind = 0;
+int debounceDelay = 10;
+int  count_wind = 0;
+
+void setup() {
+  pinMode(D2, INPUT);
+  attachInterrupt(digitalPinToInterrupt(D2), counting_windspeed, FALLING);
+  Serial.begin(115200);
+  Serial.println("SETUP");
+}
+void loop()
+{
+  sei();
+  delay(3000);
+  cli();
+  Serial.println(count_wind);
+}
+void counting_windspeed() {
+  if ((millis() - lastDebounceTime_wind) > debounceDelay) {
+    count_wind = count_wind + 1;
+    lastDebounceTime_wind = millis();
+  }
+}
